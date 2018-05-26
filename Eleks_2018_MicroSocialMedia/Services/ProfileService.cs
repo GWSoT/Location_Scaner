@@ -165,19 +165,6 @@ namespace Eleks_2018_MicroSocialMedia.Services
 
             _friendRepo.LoadFriends(user);
 
-            //var incomingAcceptedFriends = user.Profile.ReceievedFriendRequests
-            //                                .AsQueryable()
-            //                                .Where(p => p.Approved)
-            //                                .ProjectTo<FriendDto>(new { IsIncomingRequest = true })
-            //                                .ToList();
-
-            //var outcomingAcceptedFriends = user.Profile.SentFriendRequests
-            //                                .AsQueryable()
-            //                                .Where(p => p.Approved)
-            //                                .ProjectTo<FriendDto>(new { IsIncomingRequest = false });
-
-            //incomingAcceptedFriends.AddRange(outcomingAcceptedFriends.ToList());
-
             return _mapper.Map <List<FriendDto>>(user.Profile.Friends, opts => opts.Items["Profile"] = user.Profile);
         }
 
@@ -449,7 +436,6 @@ namespace Eleks_2018_MicroSocialMedia.Services
             var meetFriends = user.Profile.Friends
                 .Where(p => p.CanAddAsMeeting);
 
-            _logger.LogCritical($"Apply Geo To All Friends: {friends.Count()}");
             foreach (var friend in friends)
             {
                 _logger.LogCritical("Notifying user");
@@ -471,7 +457,6 @@ namespace Eleks_2018_MicroSocialMedia.Services
 
             if (_uow.Commit())
             {
-                _logger.LogCritical("COmmit");
                 _logger.LogCritical($"{friends.Count()}");
             }
         }
@@ -528,7 +513,6 @@ namespace Eleks_2018_MicroSocialMedia.Services
         private void AddNotification(Friend friendRequest)
         {
             _friendRepo.LoadFromFriendRequest(friendRequest);
-            _logger.LogCritical($"AddNotification {friendRequest.RequestedBy}");
             var firstNotification = new Notification
             {
                 NotificationText = $"{friendRequest.RequestedTo.FirstName + " " + friendRequest.RequestedTo.LastName} is near you",
@@ -543,7 +527,6 @@ namespace Eleks_2018_MicroSocialMedia.Services
                 DateTime = DateTime.Now,
             };
 
-            _logger.LogCritical("Before counting distance");
             _logger.LogCritical($"Distance between two users: {friendRequest.RequestedBy.DistanceBetweenGeolocations(friendRequest.RequestedTo)}");
 
             friendRequest.RequestedBy.Notifications.Add(firstNotification);

@@ -16,8 +16,8 @@ namespace Eleks_2018_MicroSocialMedia.Firebase
     public static class PushNotifications
     {
 
-        public static string firebaseKey = "AAAACdJYY2k:APA91bGXPgOupeA4_5RW4v9fw5l0mTU9wJPslMFoNMtoNkI8chl_09ati58gxki4LfDEiP88mIVTpxDXD7BXx2nawIpEOYs7CD4-9K8UzzHljuwRmcfzg7iqOS-sHObteCGlhdcgKoU0";
-        public static string senderId = "42183713641";
+        public static string firebaseKey = "<INPUT YOUR FIREBASE KEY>";
+        public static string senderId = "<INPUT YOUR SENDER ID>";
         public static string fcmUrl = "https://fcm.googleapis.com/fcm/send";
 
         public static void NotifyDevices(this ICollection<Device> devices, string fullName, ILogger logger = null)
