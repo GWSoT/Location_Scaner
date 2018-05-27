@@ -67,5 +67,8 @@ namespace Eleks_2018_MicroSocialMedia.Data
 
             base.OnModelCreating(builder);
         }
+
+        public DbSet<Profile> Profiles { get; set; }
+        public DbSet<GeolocationHistory> GeolocationHistory { get; set; }
     }
 }

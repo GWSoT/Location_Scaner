@@ -33,6 +33,13 @@ namespace Eleks_2018_MicroSocialMedia.Controllers
             _messageService = messageService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetHistory([FromQuery] DateTime date, [FromQuery] DateTime hour)
+        {
+            var records = await _profileService.GetGeolocationsAsync(User, date, hour);
+            return Ok(records);
+        }
+
         [HttpPost]
         public async Task<IActionResult> LikePost([FromQuery] string postId)
         {

@@ -7,11 +7,6 @@
     </button>
 
     <div class="collapse navbar-collapse">
-        <div class="nav navbar-nav">
-            <router-link class="nav-item nav-link" :to="{name: 'home'}">Home</router-link>
-            <router-link class="nav-item nav-link" :to="{name: 'about'}">About</router-link>
-            
-        </div>
         <div class="nav navbar-nav ml-auto">
             <router-link v-show="!isAuthenticated" class="nav-item nav-link" :to="{name: 'loginForm'}">Login</router-link>
             <router-link v-show="!isAuthenticated" class="nav-item nav-link" :to="{name: 'registerForm'}">Registration</router-link>

@@ -19,6 +19,7 @@ namespace Eleks_2018_MicroSocialMedia.UoW.Interfaces
         IMessageGroupRepository MessageGroupRepository { get; }
         IMessageGroupProfileRepository MessageGroupProfileRepository { get; }
         IPostRepository PostRepository { get; }
+        IGeolocationHistoryRepository GeolocationHistoryRepository { get; }
         bool Commit();
     }
 }

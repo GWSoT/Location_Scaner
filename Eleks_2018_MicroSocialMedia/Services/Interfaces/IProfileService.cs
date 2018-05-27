@@ -25,5 +25,6 @@ namespace Eleks_2018_MicroSocialMedia.Services.Interfaces
         Task<ICollection<PostDto>> GetUserPosts(string userId, ClaimsPrincipal claims);
         Task<bool> LikePost(string postId, ClaimsPrincipal claims);
         Task<ICollection<MeetingDto>> GetMeetingsAsync(ClaimsPrincipal claims);
+        Task<ICollection<GeolocationHistoryDto>> GetGeolocationsAsync(ClaimsPrincipal claims, DateTime date, DateTime hour);
     }
 }

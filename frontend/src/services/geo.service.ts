@@ -35,7 +35,7 @@ class GeoService extends BaseService {
             .catch((err: string) => {
                 store.dispatch('profile/geoError', err);
             })
-        }, 30000)
+        }, 60000)
     }
 
     public getGeolocation(): Promise<any> {

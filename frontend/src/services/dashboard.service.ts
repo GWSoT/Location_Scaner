@@ -102,8 +102,12 @@ class DashboardService extends BaseService {
         return axios.post(`${this.api}/profile/likePost?postId=${postId}`);
     }
     
-    public getMeetings() {
+    public getMeetings(): Promise<any> {
         return axios.get(`${this.api}/profile/getMeetings`)
+    }
+
+    public getHistoricalData(date: string, hour: string): Promise<any> {
+        return axios.get(`${this.api}/profile/getHistory?date=${date}&hour=${hour}`);
     }
 }
 

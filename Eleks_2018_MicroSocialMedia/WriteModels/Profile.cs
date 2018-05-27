@@ -32,6 +32,7 @@ namespace Eleks_2018_MicroSocialMedia.WriteModels
         public virtual ICollection<Device> Devices { get; set; }
         public virtual ICollection<MessageGroupProfile> MessageGroups { get; set; }
         public virtual ICollection<Post> Posts { get; set; }
+        public virtual ICollection<GeolocationHistory> GeolocationHistory { get; set; }
 
         public virtual ICollection<Friend> SentFriendRequests { get; set; }
         public virtual ICollection<Friend> ReceievedFriendRequests { get; set; }

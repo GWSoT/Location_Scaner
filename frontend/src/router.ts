@@ -15,21 +15,12 @@ import SentFriendRequests from './views/dashboard/Friends/SentFriendRequests.vue
 import FriendsRoot from './views/dashboard/Friends/FriendsRoot.vue';
 import FriendMap from './views/dashboard/FriendMap.vue';
 import Messages from './views/dashboard/Messages.vue';
+import store from './store/store';
 
 Vue.use(Router);
 
 const router = new Router({
   routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: Home,
-    },
-    {
-      path: '/about',
-      name: 'about',
-      component: About,
-    },
     {
       path: '/register',
       name: 'registerForm',
@@ -48,6 +39,7 @@ const router = new Router({
           path: '/dashboard/:id',
           component: Dashboard,
           name: 'dashboard',
+          meta: { requiresAuth: true },
         },
         {
           path: '/dashboard/friends',
@@ -57,16 +49,19 @@ const router = new Router({
               path: '/dashboard/friends/friends',
               component: Friends,
               name: 'friends',
+              meta: { requiresAuth: true },
             },
             {
               path: '/dashboard/friends/receievedFriends',
               component: ReceievedFriends,
               name: 'receievedFriends',
+              meta: { requiresAuth: true },
             },
             {
               path: '/dashboard/friends/sentRequests',
               component: SentFriendRequests,
               name: 'sentFriendRequests',
+              meta: { requiresAuth: true },
             },
           ],
         },
@@ -74,15 +69,32 @@ const router = new Router({
           path: '/dashboard/friendsMap',
           component: FriendMap,
           name: 'friendMap',
+          meta: { requiresAuth: true },
         },
         {
           path: '/dashboard/messages',
           component: Messages,
           name: 'messages',
+          meta: { requiresAuth: true },
         },
       ],
     },
   ],
 });
+
+router.beforeEach((to: any, from: any, next: any) => {
+  if (to.matched.some((record: any) => record.meta.requiresAuth)) {
+    if (!store.getters['auth/isAuthenticated']) {
+      next({
+        path: '/login',
+        query: { redirect: to.fullPath },
+      })
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+})
 
 export default router;

@@ -13,9 +13,10 @@ using System;
 namespace Eleks_2018_MicroSocialMedia.Migrations
 {
     [DbContext(typeof(MSMContext))]
-    partial class MSMContextModelSnapshot : ModelSnapshot
+    [Migration("20180527151757_GeolocationHistory_1")]
+    partial class GeolocationHistory_1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -13,9 +13,10 @@ using System;
 namespace Eleks_2018_MicroSocialMedia.Migrations
 {
     [DbContext(typeof(MSMContext))]
-    partial class MSMContextModelSnapshot : ModelSnapshot
+    [Migration("20180527130337_GeolocationHistory")]
+    partial class GeolocationHistory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -145,15 +146,15 @@ namespace Eleks_2018_MicroSocialMedia.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<double>("Latitude");
-
-                    b.Property<double>("Longitude");
+                    b.Property<int?>("GeolocationId");
 
                     b.Property<int?>("ProfileId");
 
                     b.Property<DateTime>("Time");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GeolocationId");
 
                     b.HasIndex("ProfileId");
 
@@ -486,6 +487,10 @@ namespace Eleks_2018_MicroSocialMedia.Migrations
 
             modelBuilder.Entity("Eleks_2018_MicroSocialMedia.WriteModels.GeolocationHistory", b =>
                 {
+                    b.HasOne("Eleks_2018_MicroSocialMedia.WriteModels.Geolocation", "Geolocation")
+                        .WithMany()
+                        .HasForeignKey("GeolocationId");
+
                     b.HasOne("Eleks_2018_MicroSocialMedia.WriteModels.Profile", "Profile")
                         .WithMany("GeolocationHistory")
                         .HasForeignKey("ProfileId");

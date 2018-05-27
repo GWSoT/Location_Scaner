@@ -37,7 +37,7 @@ export default class App extends Vue {
     setInterval(() => {
       console.log("StartHubNotify")
       userState.sendUpdateStatusOnline() 
-    }, 6000);
+    }, 60000);
   }
 }
 </script>

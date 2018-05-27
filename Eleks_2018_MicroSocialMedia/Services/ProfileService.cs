@@ -31,6 +31,7 @@ namespace Eleks_2018_MicroSocialMedia.Services
         private readonly IMeetingRepository _meetingRepo;
         private readonly ILastGeoRepository _lastGeoRepo;
         private readonly IPostRepository _postRepo;
+        private readonly IGeolocationHistoryRepository _geolocationHistoryRepo;
 
         public ProfileService(
             IPostRepository postRepo,
@@ -44,8 +45,10 @@ namespace Eleks_2018_MicroSocialMedia.Services
             INotificationRepository notificationRepo,
             IMeetingRepository meetingRepo,
             ILastGeoRepository lastGeoRepo,
+            IGeolocationHistoryRepository geolocationHistoryRepo,
             ILogger<ProfileService> logger)
         {
+            _geolocationHistoryRepo = geolocationHistoryRepo;
             _postRepo = postRepo;
             _profileRepo = profileRepo;
             _userRepo = userRepo;
@@ -58,6 +61,22 @@ namespace Eleks_2018_MicroSocialMedia.Services
             _meetingRepo = meetingRepo;
             _lastGeoRepo = lastGeoRepo;
             _notificationRepo = notificationRepo;
+        }
+
+        public async Task<ICollection<GeolocationHistoryDto>> GetGeolocationsAsync(ClaimsPrincipal claims, DateTime date, DateTime hour)
+        {
+            var user = await _userManager.GetUserAsync(claims);
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            _profileRepo.LoadUserProfile(user);
+
+            var historyRecords = _geolocationHistoryRepo.GetRecordByGivenDateAndHour(date, hour, user.Profile);
+            _logger.LogCritical($"History Records: {historyRecords.Count()}");
+            return _mapper.Map<List<GeolocationHistoryDto>>(historyRecords);
         }
 
         public async Task<ProfileDto> QueryUserOrDefault(string userId, ClaimsPrincipal userClaims)
@@ -134,15 +153,16 @@ namespace Eleks_2018_MicroSocialMedia.Services
             _geoRepo.Update(user.Profile.Geolocation);
             _lastGeoRepo.Update(user.Profile.LastGeolocation);
 
+            _geolocationHistoryRepo.AddGeolocationHistoryRecord(user.Profile, geolocation);
+
             _logger.LogCritical($"Before commit: {geolocation.Longitude} : {geolocation.Latitude}");
             if (!_uow.Commit())
-            {
-                _logger.LogCritical("Commit = 0");
+            { 
                 return false;
             }
-            _logger.LogCritical("Before applying to friends");
+
             ApplyGeolocationToAllFriends(user);
-            _logger.LogCritical("After applying to friends");
+
 
             return true;
         }

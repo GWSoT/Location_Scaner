@@ -85,6 +85,20 @@ namespace Eleks_2018_MicroSocialMedia
                             : dest.Id = ""))
                     .ForMember(prop => prop.RequestId, conf => conf.MapFrom(p => p.Id));
 
+                cfg.CreateMap<Friend, ProfileDto>()
+                     .ForMember(prop => prop.FirstName, conf => conf.ResolveUsing((src, dest, destMember, resContext) =>
+                         resContext.Items.ContainsKey("Profile") ?
+                             src.RequestedBy == (WriteModels.Profile)resContext.Items["Profile"] ? dest.FirstName = src.RequestedTo.FirstName : dest.FirstName = src.RequestedBy.FirstName
+                             : dest.FirstName = ""))
+                     .ForMember(prop => prop.LastName, conf => conf.ResolveUsing((src, dest, destMember, resContext) =>
+                         resContext.Items.ContainsKey("Profile") ?
+                             src.RequestedBy == (WriteModels.Profile)resContext.Items["Profile"] ? dest.LastName = src.RequestedTo.LastName : dest.LastName = src.RequestedBy.LastName
+                             : dest.LastName = ""))
+                     .ForMember(prop => prop.Id, conf => conf.ResolveUsing((src, dest, destMember, resContext) =>
+                         resContext.Items.ContainsKey("Profile") ?
+                             src.RequestedBy == (WriteModels.Profile)resContext.Items["Profile"] ? dest.Id = src.RequestedTo.ExternalId : dest.LastName = src.RequestedBy.ExternalId
+                             : dest.Id = ""))
+                     .ForAllOtherMembers(opts => opts.Ignore());
 
                 cfg.CreateMap<Friend, GeomarkerDto>()
                     .ForMember(prop => prop.FullName, conf => conf.MapFrom(p => p.RequestedBy == profile ? p.RequestedTo.FirstName + " " + p.RequestedTo.LastName : p.RequestedBy.FirstName + " " + p.RequestedBy.LastName))
@@ -119,6 +133,11 @@ namespace Eleks_2018_MicroSocialMedia
                     .ForMember(prop => prop.Friends, conf => conf.MapFrom(p => p.Friends))
                     .ForMember(prop => prop.MeetingLocation, conf => conf.MapFrom(p => p.MeetingLocation))
                     .ForMember(prop => prop.MeetingTime, conf => conf.MapFrom(p => p.MeetingTime));
+
+                cfg.CreateMap<GeolocationHistory, GeolocationHistoryDto>()
+                    .ForMember(prop => prop.DateTime, conf => conf.MapFrom(p => p.Time))
+                    .ForMember(prop => prop.Latitude, conf => conf.MapFrom(p => p.Latitude))
+                    .ForMember(prop => prop.Longitude, conf => conf.MapFrom(p => p.Longitude));
             });
 
             services.AddDbContext<MSMContext>(options => 
@@ -191,6 +210,7 @@ namespace Eleks_2018_MicroSocialMedia
             services.AddScoped<IMessageGroupRepository, MessageGroupRepository>();
             services.AddScoped<IMessageGroupProfileRepository, MessageGroupProfileRepository>();
             services.AddScoped<IPostRepository, PostRepository>();
+            services.AddScoped<IGeolocationHistoryRepository, GeolocationHistoryRepository>();
 
             services.AddScoped<IMessageService, MessageService>();
             services.AddScoped<IAccountService, AccountService>();

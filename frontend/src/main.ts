@@ -5,7 +5,6 @@ import store from './store/store';
 import './assets/sass/main.scss';
 import axios from 'axios';
 
-
 Vue.config.productionTip = false;
 
 new Vue({
