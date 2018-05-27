@@ -1,4 +1,4 @@
-﻿using Eleks_2018_MicroSocialMedia.WriteModels;
+using Eleks_2018_MicroSocialMedia.WriteModels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -15,7 +15,7 @@ namespace Eleks_2018_MicroSocialMedia.Firebase
 {
     public static class PushNotifications
     {
-
+        // It's better to move secret & api keys to some config
         public static string firebaseKey = "<INPUT YOUR FIREBASE KEY>";
         public static string senderId = "<INPUT YOUR SENDER ID>";
         public static string fcmUrl = "https://fcm.googleapis.com/fcm/send";

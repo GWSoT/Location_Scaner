@@ -1,0 +1,1 @@
+The task is done well, various technologies are applied with knowledge how to use them, code formatting is consistent and code is easy to read, at the first glance, architecture is OK.
