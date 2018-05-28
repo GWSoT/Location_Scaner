@@ -12,12 +12,29 @@ namespace Eleks_2018_MicroSocialMedia.WriteModels
 
         public DateTime MeetingTime { get; set; }
 
-        public int? MeetingLocationId { get; set; }
-        public Geolocation MeetingLocation { get; set; }
+        public double Longitude { get; set; }
+        public double Latitude { get; set; }
 
-        public virtual ICollection<Friend> Friends { get; set; }
+        public virtual ICollection<MeetingProfile> Friends { get; set; }
 
         public int? ProfileId { get; set; }
         public Profile Profile { get; set; }
+
+        public void AddMeetingFriend(Profile profile)
+        {
+            Friends.Add(new MeetingProfile
+            {
+                Meeting = this,
+                Profile = profile,
+            });
+        }
+
+        public void AddMeetingFriends(IEnumerable<Profile> profiles)
+        {
+            foreach(var profile in profiles)
+            {
+                this.AddMeetingFriend(profile);
+            }
+        }
     }
 }

@@ -25,6 +25,7 @@ namespace Eleks_2018_MicroSocialMedia.UoW
         private IMessageGroupProfileRepository _messageGroupProfileRepository;
         private IGeolocationHistoryRepository _geolocationHistoryRepository;
         private IPostRepository _postRepository;
+        private IMeetingProfileRepository _meetingProfileRepository;
         private readonly MSMContext _dbContext;
 
         public UnitOfWork(MSMContext dbContext)
@@ -125,6 +126,14 @@ namespace Eleks_2018_MicroSocialMedia.UoW
             get
             {
                 return _geolocationHistoryRepository = _geolocationHistoryRepository ?? new GeolocationHistoryRepository(_dbContext);
+            }
+        }
+
+        public IMeetingProfileRepository MeetingProfileRepository
+        {
+            get
+            {
+                return _meetingProfileRepository = _meetingProfileRepository ?? new MeetingProfileRepository(_dbContext);
             }
         }
 

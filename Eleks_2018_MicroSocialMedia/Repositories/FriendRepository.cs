@@ -1,4 +1,5 @@
 ﻿using Eleks_2018_MicroSocialMedia.Data;
+using Eleks_2018_MicroSocialMedia.ReadModels;
 using Eleks_2018_MicroSocialMedia.Repositories.Interfaces;
 using Eleks_2018_MicroSocialMedia.WriteModels;
 using Microsoft.EntityFrameworkCore;
@@ -119,6 +120,14 @@ namespace Eleks_2018_MicroSocialMedia.Repositories
         public override void Update(Friend entity)
         {
             base.Update(entity);
+        }
+
+        public IEnumerable<Profile> GetFriendProfilesBySpecifiedRequestedProfile(Profile profile, IEnumerable<Friend> friends)
+        {
+            var requestedTo = friends.Where(p => p.RequestedBy == profile).Select(p => p.RequestedTo).ToList();
+            var requestedBy = friends.Where(p => p.RequestedTo == profile).Select(p => p.RequestedBy).ToList();
+            requestedBy.AddRange(requestedTo);
+            return requestedBy;
         }
 
         private Func<AppUser, AppUser, Friend, bool> IsLegitRequest = 

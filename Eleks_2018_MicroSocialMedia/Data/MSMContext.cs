@@ -48,9 +48,18 @@ namespace Eleks_2018_MicroSocialMedia.Data
                 .WithOne(p => p.Geolocation)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<Meeting>()
+            builder.Entity<MeetingProfile>()
+                .HasKey(bc => new { bc.MeetingId, bc.ProfileId });
+
+            builder.Entity<MeetingProfile>()
                 .HasOne(p => p.Profile)
-                .WithMany(p => p.Meetings);
+                .WithMany(p => p.Meetings)
+                .HasForeignKey(p => p.ProfileId);
+
+            builder.Entity<MeetingProfile>()
+                .HasOne(p => p.Meeting)
+                .WithMany(p => p.Friends)
+                .HasForeignKey(p => p.MeetingId);
 
             builder.Entity<MessageGroupProfile>()
                 .HasKey(bc => new { bc.MessageGroupId, bc.ProfileId });

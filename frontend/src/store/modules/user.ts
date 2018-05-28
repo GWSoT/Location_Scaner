@@ -92,6 +92,7 @@ const actions = {
     userRequestMeetings: ({commit, dispatch}: {commit: any, dispatch: any}) => {
         profileService.getMeetings()
         .subscribe((result: any) => {
+            console.log(result);
             commit('userMeetingsSuccess', result);
         }, (errors: any) => {
             commit('userMeetingsError');

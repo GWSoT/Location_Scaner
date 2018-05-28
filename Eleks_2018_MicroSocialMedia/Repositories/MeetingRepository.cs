@@ -24,7 +24,8 @@ namespace Eleks_2018_MicroSocialMedia.Repositories
                 .Reference(p => p.Profile)
                 .Query()
                 .Include(p => p.Meetings)
-                    .ThenInclude(p => p.MeetingLocation)
+                    .ThenInclude(p => p.Meeting)
+                        .ThenInclude(p => p.Friends)
                 .Load();
         }
     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Eleks_2018_MicroSocialMedia.ReadModels;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -19,7 +20,6 @@ namespace Eleks_2018_MicroSocialMedia.WriteModels
         public UserStatus UserStatus { get; set; }
 
         public virtual ICollection<Notification> Notifications { get; set; }
-        public virtual ICollection<Meeting> Meetings { get; set; }
  
         public int? GeolocationId { get; set; }
         [ForeignKey("GeolocationId")]
@@ -33,7 +33,7 @@ namespace Eleks_2018_MicroSocialMedia.WriteModels
         public virtual ICollection<MessageGroupProfile> MessageGroups { get; set; }
         public virtual ICollection<Post> Posts { get; set; }
         public virtual ICollection<GeolocationHistory> GeolocationHistory { get; set; }
-
+        public virtual ICollection<MeetingProfile> Meetings { get; set; }
         public virtual ICollection<Friend> SentFriendRequests { get; set; }
         public virtual ICollection<Friend> ReceievedFriendRequests { get; set; }
 
@@ -59,6 +59,23 @@ namespace Eleks_2018_MicroSocialMedia.WriteModels
         {
             SentFriendRequests = new List<Friend>();
             ReceievedFriendRequests = new List<Friend>();
+        }
+
+        public MeetingProfile CreateNewMeeting(Geolocation geolocation)
+        {
+            var meetingProfile = new MeetingProfile
+            {
+                Profile = this,
+                Meeting = new Meeting
+                {
+                    Latitude = geolocation.Latitude,
+                    Longitude = geolocation.Longitude,
+                    MeetingTime = DateTime.Now,
+                    Profile = this,
+                    Friends = new List<MeetingProfile>(),
+                },
+            };
+            return meetingProfile;
         }
 
     }

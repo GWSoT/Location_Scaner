@@ -130,8 +130,9 @@ namespace Eleks_2018_MicroSocialMedia
                     resContext.Items.ContainsKey("Profile") ? src.IsLikedByMe((WriteModels.Profile)resContext.Items["Profile"]) : false));
 
                 cfg.CreateMap<Meeting, MeetingDto>()
-                    .ForMember(prop => prop.Friends, conf => conf.MapFrom(p => p.Friends))
-                    .ForMember(prop => prop.MeetingLocation, conf => conf.MapFrom(p => p.MeetingLocation))
+                    .ForMember(prop => prop.Friends, conf => conf.MapFrom(p => p.Friends.Select(x => x.Profile)))
+                    .ForMember(prop => prop.Longitude, conf => conf.MapFrom(p => p.Longitude))
+                    .ForMember(prop => prop.Latitude, conf => conf.MapFrom(p => p.Latitude))
                     .ForMember(prop => prop.MeetingTime, conf => conf.MapFrom(p => p.MeetingTime));
 
                 cfg.CreateMap<GeolocationHistory, GeolocationHistoryDto>()

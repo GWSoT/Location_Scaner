@@ -13,9 +13,10 @@ using System;
 namespace Eleks_2018_MicroSocialMedia.Migrations
 {
     [DbContext(typeof(MSMContext))]
-    partial class MSMContextModelSnapshot : ModelSnapshot
+    [Migration("20180528101920_MeetingsUpdate")]
+    partial class MeetingsUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -197,15 +198,15 @@ namespace Eleks_2018_MicroSocialMedia.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<double>("Latitude");
-
-                    b.Property<double>("Longitude");
+                    b.Property<int?>("MeetingLocationId");
 
                     b.Property<DateTime>("MeetingTime");
 
                     b.Property<int?>("ProfileId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MeetingLocationId");
 
                     b.HasIndex("ProfileId");
 
@@ -516,6 +517,10 @@ namespace Eleks_2018_MicroSocialMedia.Migrations
 
             modelBuilder.Entity("Eleks_2018_MicroSocialMedia.WriteModels.Meeting", b =>
                 {
+                    b.HasOne("Eleks_2018_MicroSocialMedia.WriteModels.Geolocation", "MeetingLocation")
+                        .WithMany()
+                        .HasForeignKey("MeetingLocationId");
+
                     b.HasOne("Eleks_2018_MicroSocialMedia.WriteModels.Profile", "Profile")
                         .WithMany()
                         .HasForeignKey("ProfileId");

@@ -1,4 +1,5 @@
-﻿using Eleks_2018_MicroSocialMedia.WriteModels;
+﻿using Eleks_2018_MicroSocialMedia.ReadModels;
+using Eleks_2018_MicroSocialMedia.WriteModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,5 +19,6 @@ namespace Eleks_2018_MicroSocialMedia.Repositories.Interfaces
         void AddFriendRequest(AppUser requestUser, AppUser receieveUser);
         void LoadFromFriendRequest(Friend friendsRequest);
         void Update(Friend friendRequest);
+        IEnumerable<Profile> GetFriendProfilesBySpecifiedRequestedProfile(Profile profile, IEnumerable<Friend> friends);
     }
 }

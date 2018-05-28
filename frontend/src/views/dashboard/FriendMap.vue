@@ -32,7 +32,7 @@
         <div class="row" v-for="(meeting, index) in meetings" v-bind:key="index">
             <div class="col">
                 <span>
-                    {{ meeting.meetingLocation.longitude }} {{ meeting.meetingLocation.latitude }}
+                    {{ meeting.longitude }} {{ meeting.latitude }}
                 </span>
             </div>
             <div class="col-3">

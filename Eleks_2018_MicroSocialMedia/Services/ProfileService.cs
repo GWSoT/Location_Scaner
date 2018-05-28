@@ -466,19 +466,32 @@ namespace Eleks_2018_MicroSocialMedia.Services
             }
 
             if (friendsInMeetingRange.Count() > 0)
-            { 
-                user.Profile.Meetings.Add(new Meeting
+            {
+                _logger.LogCritical($"Friends in meet range {friendsInMeetingRange.Count()} | {user.Profile.Geolocation.Longitude}");
+
+                var friendProfiles = _friendRepo.GetFriendProfilesBySpecifiedRequestedProfile(user.Profile, user.Profile.Friends);
+
+                var meeting = new Meeting
                 {
-                    Friends = friendsInMeetingRange.ToList(),
+                    Latitude = user.Profile.Geolocation.Latitude,
+                    Longitude = user.Profile.Geolocation.Longitude,
                     MeetingTime = DateTime.Now,
                     Profile = user.Profile,
-                    MeetingLocation = user.Profile.Geolocation,
+                    Friends = new List<MeetingProfile>(),
+                };
+
+                meeting.AddMeetingFriends(friendProfiles);
+
+                user.Profile.Meetings.Add(new MeetingProfile
+                {
+                    Profile = user.Profile,
+                    Meeting = meeting,
                 });
             }
 
             if (_uow.Commit())
             {
-                _logger.LogCritical($"{friends.Count()}");
+                _logger.LogCritical($"Commit? = {friends.Count()}");
             }
         }
 
@@ -573,8 +586,10 @@ namespace Eleks_2018_MicroSocialMedia.Services
 
             _meetingRepo.LoadUserProfileWithMeetings(user);
 
-            var meetings = _mapper.Map<List<MeetingDto>>(user.Profile.Meetings, opts => opts.Items["Profile"] = user.Profile);
-            return meetings;
+            var meetings = user.Profile.Meetings.Select(p => p.Meeting);
+
+            var meetingsDto = _mapper.Map<List<MeetingDto>>(meetings, opts => opts.Items["Profile"] = user.Profile);
+            return meetingsDto;
         }
 
         public async Task<ICollection<PostDto>> GetUserPosts(string userId, ClaimsPrincipal claims)

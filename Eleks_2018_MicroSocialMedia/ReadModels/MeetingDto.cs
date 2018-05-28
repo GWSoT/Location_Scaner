@@ -8,7 +8,8 @@ namespace Eleks_2018_MicroSocialMedia.ReadModels
     public class MeetingDto
     {
         public DateTime MeetingTime { get; set; }
-        public GeolocationDto MeetingLocation { get; set; }
-        public ICollection<FriendDto> Friends { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
+        public ICollection<ProfileDto> Friends { get; set; }
     }
 }
