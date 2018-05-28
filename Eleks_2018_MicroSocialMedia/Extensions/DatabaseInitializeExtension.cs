@@ -25,7 +25,7 @@ namespace Eleks_2018_MicroSocialMedia.Extensions
                 catch (Exception ex)
                 {
                     var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogCritical($"{ex}, An Error Occured while seeding database");
+                    logger.LogCritical($"An Error Occured while seeding database, {ex}");
                 }
             }
             return host;

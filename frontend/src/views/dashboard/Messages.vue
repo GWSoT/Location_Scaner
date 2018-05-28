@@ -92,7 +92,7 @@ export default class Messages extends Vue {
     private conversationName = '';
     private message = '';
 
-    private created() {
+    private mounted() {
         this.getFriends();
     }
 

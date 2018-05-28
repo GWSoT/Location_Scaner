@@ -19,7 +19,7 @@ export abstract class BaseService {
             }
         }
 
-        modelStateErrors = modelStateErrors = '' ? null : modelStateErrors;
+        modelStateErrors = modelStateErrors == '' ? null : modelStateErrors;
         return Observable.throw(modelStateErrors || 'Server error');
     }
 }

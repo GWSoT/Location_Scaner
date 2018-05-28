@@ -22,3 +22,11 @@ axios.interceptors.request.use((axiosCfg: any) => {
 }, (err: any) => {
   return Promise.reject(err);
 })
+
+
+axios.interceptors.response.use((response: any) => response, (error: any) => {
+  console.log(error.repsonse);
+  if (error.response.status === 401) {
+    store.dispatch('auth/authLogout');
+  }
+})

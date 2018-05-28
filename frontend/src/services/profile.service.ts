@@ -18,6 +18,12 @@ class ProfileService extends BaseService {
             .map((result: any) => result.data)
             .catch((err: any) => this.handleError(err.response));
     }
+
+    public getMeetings(): Observable<any> {
+        return Observable.fromPromise(axios.get(`${this.api}/profile/getMeetings`))
+            .map((result: any) => result.data)
+            .catch((err: any) => this.handleError(err.response));
+    }
 }
 
 export const profileService = ProfileService.Instance; 

@@ -12,8 +12,8 @@ class GeoService extends BaseService {
     private geocoder!: any;
 
     private constructor() { 
-        super(); 
-
+        super();        
+        this.geocoder = new google.maps.Geocoder(); 
     }
 
     public static get Instance() {
@@ -21,7 +21,6 @@ class GeoService extends BaseService {
     }
 
     public initialize() {
-        this.geocoder = new google.maps.Geocoder();
         setInterval(() => {
             console.log('interval');
             this.getGeolocation()
@@ -35,7 +34,7 @@ class GeoService extends BaseService {
             .catch((err: string) => {
                 store.dispatch('profile/geoError', err);
             })
-        }, 60000)
+        }, 30000)
     }
 
     public getGeolocation(): Promise<any> {
@@ -64,8 +63,8 @@ class GeoService extends BaseService {
             })
         ])
     }
-    public getFormattedGeodata(geodata: Geolocation): Promise<any> {
-        return new Promise((resolve: any, reject: any) => {
+    public getFormattedGeodata(geodata: Geolocation): Observable<any> {
+        return Observable.fromPromise(new Promise((resolve: any, reject: any) => {
             this.geocoder.geocode({
                 location: {
                     lat: geodata.latitude,
@@ -78,7 +77,9 @@ class GeoService extends BaseService {
                     reject("Error in obtaining formatted geocoder.");
                 }
             });
-        })
+        }))
+        .map((result: any) => result)
+        .catch((err: any) => this.handleError(err));
     }
 }
 

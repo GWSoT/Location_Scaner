@@ -32,7 +32,7 @@
         <div class="row" v-for="(meeting, index) in meetings" v-bind:key="index">
             <div class="col">
                 <span>
-                    {{ meeting.formattedGeodata }}
+                    {{ meeting.meetingLocation.longitude }} {{ meeting.meetingLocation.latitude }}
                 </span>
             </div>
             <div class="col-3">
@@ -40,7 +40,7 @@
                     {{ formattedDate(meeting.meetingTime) }}
                 </span>
             </div>
-            <div class="col-2" v-for="(person, idx) in meeting.persons" v-bind:key="idx">
+            <div class="col-2" v-for="(person, idx) in meeting.friends" v-bind:key="idx">
                 <router-link :to="{name: 'dashboard', params: {'id': person.id}}">
                     {{ person.firstName }} {{ person.lastName }}
                 </router-link>
@@ -66,7 +66,7 @@ export default class FriendMap extends Vue {
     private map!: google.maps.Map;
     private historyMap!: google.maps.Map;
     private geolocation!: Geolocation;
-    private meetings = [] as Meeting[];
+
     private historicalData = [] as HistoryGeolocation[];
     private poly!: google.maps.Polyline;
     private coordinates = [] as any;     
@@ -98,7 +98,8 @@ export default class FriendMap extends Vue {
         this.map.panTo(center ? center : location);
 
         this.setMarkers(location);
-        this.getMeetings();
+
+        this.$store.dispatch('user/userRequestMeetings');
     }
 
     private setMarkers(location: google.maps.LatLng) {
@@ -143,7 +144,6 @@ export default class FriendMap extends Vue {
 
             result.data.forEach((elem: any) => {
                 var latLng = new google.maps.LatLng(elem.latitude, elem.longitude);
-
                 this.addNewHistoricalRecord(elem);
                 this.addNewRecordToCoordinates(elem);
                 this.addNewMapMarkerToPolymarkersArray(latLng, elem);
@@ -154,41 +154,9 @@ export default class FriendMap extends Vue {
         })
     }
 
-    private getMeetings() {
-        dashboardService.getMeetings()
-        .then((result: any) => {
-            result.data.forEach((meeting: any) => {
-                let tempPersons = [] as Person[];
-                let meetingLoc = { 
-                    latitude: meeting.meetingLocation.latitude,
-                    longitude: meeting.meetingLocation.longitude,
-                } as Geolocation;
-
-                meeting.friends.forEach((person: any) => {
-                    tempPersons.push({
-                        firstName: person.firstName,
-                        lastName: person.lastName,
-                        id: person.id,
-                    } as Person);
-                });
-
-                let meet = {
-                    meetingTime: meeting.meetingTime,
-                    persons: tempPersons,
-                    meetingLocation: meetingLoc,
-                    formattedGeodata: 'undefined'
-                } as Meeting;
-
-                geoService.getFormattedGeodata(meetingLoc)
-                .then((result: any) => {
-                    console.log(result);
-                    meet.formattedGeodata = result;
-                });
-
-                this.meetings.push(meet);
-            });
-        })
-    }
+    private get meetings() {
+        return this.$store.getters['user/meetings'];
+    } 
 
     private addNewRecordToCoordinates(elem: any) {
         this.coordinates.push({

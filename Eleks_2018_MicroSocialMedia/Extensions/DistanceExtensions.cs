@@ -84,19 +84,5 @@ namespace Eleks_2018_MicroSocialMedia.Extensions
                             UnitOfLength.Kilometers
                         );
         }
-
-        public static void NotifyUserUsingWebPush(this IEnumerable<Friend> friends, ILogger logger = null)
-        {
-            foreach (var friend in friends)
-            {
-                friend.NotifyUserUsingWebPush(logger);
-            }
-        }
-
-        public static void NotifyUserUsingWebPush(this Friend friendRequest, ILogger logger = null)
-        {
-            friendRequest.RequestedBy.Devices.NotifyDevices(friendRequest.RequestedTo.FirstName + " " + friendRequest.RequestedTo.FirstName, logger);
-            friendRequest.RequestedTo.Devices.NotifyDevices(friendRequest.RequestedBy.FirstName + " " + friendRequest.RequestedBy.LastName, logger);
-        }
     }
 }

@@ -31,6 +31,7 @@ namespace Eleks_2018_MicroSocialMedia.Services
         private readonly IMeetingRepository _meetingRepo;
         private readonly ILastGeoRepository _lastGeoRepo;
         private readonly IPostRepository _postRepo;
+        private readonly INotificationService _notificationService;
         private readonly IGeolocationHistoryRepository _geolocationHistoryRepo;
 
         public ProfileService(
@@ -46,9 +47,11 @@ namespace Eleks_2018_MicroSocialMedia.Services
             IMeetingRepository meetingRepo,
             ILastGeoRepository lastGeoRepo,
             IGeolocationHistoryRepository geolocationHistoryRepo,
+            INotificationService notificationService,
             ILogger<ProfileService> logger)
         {
             _geolocationHistoryRepo = geolocationHistoryRepo;
+            _notificationService = notificationService;
             _postRepo = postRepo;
             _profileRepo = profileRepo;
             _userRepo = userRepo;
@@ -162,8 +165,6 @@ namespace Eleks_2018_MicroSocialMedia.Services
             }
 
             ApplyGeolocationToAllFriends(user);
-
-
             return true;
         }
 
@@ -442,33 +443,33 @@ namespace Eleks_2018_MicroSocialMedia.Services
                         .ProjectTo<GeomarkerDto>(new { profile = user.Profile });
         }
 
+        // Todo refactor and reimplement logic of this function
         private void ApplyGeolocationToAllFriends(AppUser user)
         {
             _profileRepo.LoadUserProfileWithFriendsAndDevices(user);
 
             _friendRepo.LoadFriendsWithGeolocationAndDevices(user);
 
-
-
             var friends = user.Profile.Friends
                 .Where(p => p.IsInRange && p.CanSendNotification);
 
-            var meetFriends = user.Profile.Friends
+            var friendsInMeetingRange = user.Profile.Friends
                 .Where(p => p.CanAddAsMeeting);
 
+            _logger.LogCritical($"{user.Profile.FirstName} {user.Profile.LastName} Friends count: {friends.Count()} Devices: {user.Profile.Devices.Count()}");
             foreach (var friend in friends)
             {
-                _logger.LogCritical("Notifying user");
+                _logger.LogCritical($"{user.Profile.FirstName} {user.Profile.LastName} Notifying user");
                 friend.LastNotification = DateTime.Now;
                 AddNotification(friend);
-                friend.NotifyUserUsingWebPush(_logger);
+                _notificationService.NotifyUserUsingWebPush(friend);
             }
 
-            if (meetFriends.Count() > 0)
+            if (friendsInMeetingRange.Count() > 0)
             { 
                 user.Profile.Meetings.Add(new Meeting
                 {
-                    Friends = meetFriends.ToList(),
+                    Friends = friendsInMeetingRange.ToList(),
                     MeetingTime = DateTime.Now,
                     Profile = user.Profile,
                     MeetingLocation = user.Profile.Geolocation,

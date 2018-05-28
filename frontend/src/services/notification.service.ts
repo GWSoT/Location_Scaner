@@ -23,12 +23,12 @@ class NotificationService extends BaseService {
 
         this.messaging = firebase.messaging();
 
-        if (Notification.permission === 'granted') {
+        if ((Notification as any).permission === 'granted') {
             this.subscribe();
         }
 
                 
-        this.messaging.onMessage(function(payload: any) {
+        this.messaging.onMessage((payload: any) => {
             console.log("Message receieved: " + payload);
             new Notification(payload.notification.title, payload.notification);
         })
@@ -60,7 +60,7 @@ class NotificationService extends BaseService {
     }
 
     public deleteTokenFromServer(token: any): Observable<any> {
-        return Observable.fromPromise(axios.get(`${this.api}/profile/DeleteOldDeviceId?=${token}`))
+        return Observable.fromPromise(axios.get(`${this.api}/profile/deleteOldDeviceId?=${token}`))
                 .catch((err: any) => this.handleError(err));
     }
 
@@ -86,6 +86,7 @@ function isTokenAlreadySent(token: any): boolean {
             store.dispatch('user/userRemoveDeviceId');
         });
     }
+    console.log("isTokenAlreadySent: " + equals);
     return equals;
 }
 

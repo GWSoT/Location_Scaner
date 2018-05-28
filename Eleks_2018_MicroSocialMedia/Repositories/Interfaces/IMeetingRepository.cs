@@ -11,5 +11,6 @@ namespace Eleks_2018_MicroSocialMedia.Repositories.Interfaces
         : IRepository<Meeting, int>
     {
         void LoadUserProfileWithMeetings(AppUser user);
+        //ICollection<Meeting> GetMeetingsByGivenDateAndHour(AppUser user, DateTime date, DateTime hour);
     }
 }

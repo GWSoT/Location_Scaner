@@ -32,8 +32,8 @@ namespace Eleks_2018_MicroSocialMedia
 {
     public class Startup
     {
-        private const string SecretKey = "3AJdk1414k3jkljioDAJSKLJKLjkl4kljklsjd";
-        private readonly SymmetricSecurityKey _signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(SecretKey));
+        //private const string SecretKey = "3AJdk1414k3jkljioDAJSKLJKLjkl4kljklsjd";
+        //private readonly SymmetricSecurityKey _signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(SecretKey));
 
         public Startup(IConfiguration configuration)
         {
@@ -137,7 +137,10 @@ namespace Eleks_2018_MicroSocialMedia
                 cfg.CreateMap<GeolocationHistory, GeolocationHistoryDto>()
                     .ForMember(prop => prop.DateTime, conf => conf.MapFrom(p => p.Time))
                     .ForMember(prop => prop.Latitude, conf => conf.MapFrom(p => p.Latitude))
-                    .ForMember(prop => prop.Longitude, conf => conf.MapFrom(p => p.Longitude));
+                    .ForMember(prop => prop.Longitude, conf => conf.MapFrom(p => p.Longitude))
+                    .ForMember(prop => prop.MeetingProfiles, conf => conf.ResolveUsing((src, dest, destMember, resContext) =>
+                        resContext.Items.ContainsKey("Profiles") ? dest.MeetingProfiles = (List<ProfileDto>)resContext.Items["Profiles"]
+                                                                 : dest.MeetingProfiles = new List<ProfileDto>()));
             });
 
             services.AddDbContext<MSMContext>(options => 
@@ -197,6 +200,7 @@ namespace Eleks_2018_MicroSocialMedia
             }));
 
             services.AddSingleton<IJwtFactory, JwtFactory>();
+            services.AddSingleton<INotificationService, NotificationService>();
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();

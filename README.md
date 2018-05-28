@@ -25,5 +25,5 @@
 ---
 
 #### Backend: 
-Change Firebase SenderId and ServerKey in PushNotification.cs
-Change JwtKey in appsetting.json
+* Change Firebase SenderId and ServerKey in PushNotification.cs
+* Change JwtKey in appsetting.json

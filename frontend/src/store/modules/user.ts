@@ -15,6 +15,7 @@ const state = {
     geolocation: localStorage.getItem('_geo') || {},
     messages: [] as MessageGroup[],
     conversations: [] as Conversation[],
+    meetings: [] as any[],
 };
 
 const getters = {
@@ -29,6 +30,7 @@ const getters = {
     },
     conversations: (userState: any) => userState.conversations,
     isSubscribed: (userState: any) => userState.isSubscribed,
+    meetings: (userState: any) => userState.meetings,
 };
 
 const actions = {
@@ -87,6 +89,14 @@ const actions = {
           });
         })
     },
+    userRequestMeetings: ({commit, dispatch}: {commit: any, dispatch: any}) => {
+        profileService.getMeetings()
+        .subscribe((result: any) => {
+            commit('userMeetingsSuccess', result);
+        }, (errors: any) => {
+            commit('userMeetingsError');
+        })
+    }
 };
 
 const mutations = {
@@ -118,7 +128,14 @@ const mutations = {
     },
     userSubscriptionSuccess: (userState: any) => {
         userState.isSubscribed = true;
-    }
+    },
+    userMeetingsSuccess: (userState: any, meetings: any) => {
+        userState.status = "Successfully fetched meetings";
+        userState.meetings = meetings;
+    },
+    userMeetingsError: (userState: any) => {
+        userState.status = "Error while fetching meetings";
+    },
 };
 
 export default {

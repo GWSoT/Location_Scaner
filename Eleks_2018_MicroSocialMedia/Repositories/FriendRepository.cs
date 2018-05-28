@@ -1,5 +1,4 @@
 ﻿using Eleks_2018_MicroSocialMedia.Data;
-using Eleks_2018_MicroSocialMedia.Extensions;
 using Eleks_2018_MicroSocialMedia.Repositories.Interfaces;
 using Eleks_2018_MicroSocialMedia.WriteModels;
 using Microsoft.EntityFrameworkCore;
@@ -120,14 +119,6 @@ namespace Eleks_2018_MicroSocialMedia.Repositories
         public override void Update(Friend entity)
         {
             base.Update(entity);
-        }
-
-        public void NotifyUserWithWebPush(IEnumerable<Friend> friends)
-        {
-            foreach(var friend in friends)
-            {
-                friend.NotifyUserUsingWebPush();   
-            }
         }
 
         private Func<AppUser, AppUser, Friend, bool> IsLegitRequest = 

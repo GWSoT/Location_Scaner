@@ -10,5 +10,6 @@ namespace Eleks_2018_MicroSocialMedia.ReadModels
         public DateTime DateTime { get; set; }
         public double Latitude { get; set; }
         public double Longitude { get; set; }
+        public ICollection<ProfileDto> MeetingProfiles { get; set; }
     }
 }

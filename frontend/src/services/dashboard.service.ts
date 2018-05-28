@@ -89,21 +89,21 @@ class DashboardService extends BaseService {
     }
 
     public addPost(postBody: string) {
-        return axios.post(`${this.api}/profile/addPost`,
+        return Observable.fromPromise(axios.post(`${this.api}/profile/addPost`,
         {  
             postBody: postBody,           
             headers: {
                 'Authorization' : `Bearer ${store.getters['auth/authToken']}`
             },
-        });
+        }))
+        .map((result: any) => result.data)
+        .catch((error: any) => this.handleError(error));
     }
 
     public likePost(postId: string) {
-        return axios.post(`${this.api}/profile/likePost?postId=${postId}`);
-    }
-    
-    public getMeetings(): Promise<any> {
-        return axios.get(`${this.api}/profile/getMeetings`)
+        return Observable.fromPromise(axios.post(`${this.api}/profile/likePost?postId=${postId}`))
+                .map((res: any) => res)
+                .catch((err: any) => this.handleError(err));
     }
 
     public getHistoricalData(date: string, hour: string): Promise<any> {

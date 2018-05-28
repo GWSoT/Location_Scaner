@@ -46,10 +46,9 @@ const actions = {
     updateFormattedGeolocation: ({commit, dispatch}: {commit: any, dispatch: any}, geodata: Geolocation) => {
         commit('geoUpdate', geodata);
         geoService.getFormattedGeodata(geodata)
-        .then((res: any) => {
+        .subscribe((res: any) => {
             commit('formattedGeolocation', res);
-        })
-        .catch((err: any) => {
+        }, (errors: any) => {
             commit('geolocationError'); 
         });
     },
@@ -75,29 +74,26 @@ const actions = {
     },
     profilePost: ({commit, dispatch}: {commit: any, dispatch: any}, postBody: string) => {
         dashboardService.addPost(postBody)
-        .then((result: any) => {
-            console.log(result.data);
+        .subscribe((result: any) => {
             commit('postSuccess', {
-                postAuthor: result.data.postAuthor.firstName + " " + result.data.postAuthor.lastName,
-                postBody: result.data.postBody,
-                postDate: result.data.postDate,
-                postId: result.data.postId,
-                likesCount: result.data.likesCount,
-                isLikedByMe: result.data.isLikedByMe,
+                postAuthor: result.postAuthor.firstName + " " + result.postAuthor.lastName,
+                postBody: result.postBody,
+                postDate: result.postDate,
+                postId: result.postId,
+                likesCount: result.likesCount,
+                isLikedByMe: result.isLikedByMe,
             } as Post);
-        })
-        .catch((err: any) => {
+        }, (errors: any) => {
             commit('postError');
-        })
+        });
     },
     profilePostLikeRequest: ({commit, dispatch}: {commit: any, dispatch: any}, postId: string) => {
         dashboardService.likePost(postId)
-        .then((result: any) => {
+        .subscribe((result: any) => {
             commit('likeSuccess', postId);
-        })
-        .catch((err: any) => {
+        }, (err: any) => {
             commit('likeError');
-        })
+        });
     },
 };
 
@@ -145,7 +141,7 @@ const mutations = {
     likeSuccess: (profileState: any, postId: string) => {
         profileState.status = "Like request success";
         profileState.profilePosts.forEach((post: Post) => {
-            if (post.postId == postId) {
+            if (post.postId === postId) {
                 if (!post.isLikedByMe) {
                     post.isLikedByMe = true;
                     --post.likesCount;
